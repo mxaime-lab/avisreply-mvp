@@ -1,0 +1,9 @@
+{
+  "name": "avisreply-mvp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AvisReply MVP - generation de reponses IA aux avis Google",
+  "engines": {
+    "node": ">=18.x"
+  }
+}

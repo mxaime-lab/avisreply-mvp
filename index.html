@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AvisReply — Reponses IA a vos avis Google</title>
+  <meta name="description" content="Generez en un clic une reponse professionnelle a vos avis Google grace a l'IA." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .star-btn { transition: transform .1s ease; }
+    .star-btn:hover { transform: scale(1.15); }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  <div class="max-w-2xl mx-auto px-4 py-10">
+
+    <!-- En-tete -->
+    <header class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 mb-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg">A</div>
+        <span class="text-2xl font-bold tracking-tight">AvisReply</span>
+      </div>
+      <h1 class="text-xl sm:text-2xl font-semibold text-slate-900">Repondez a vos avis Google en un clic</h1>
+      <p class="text-slate-500 mt-2">Collez un avis, l'IA redige une reponse professionnelle prete a publier.</p>
+    </header>
+
+    <!-- Carte formulaire -->
+    <main class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-6 sm:p-8">
+      <form id="form" class="space-y-5">
+
+        <!-- Type de commerce -->
+        <div>
+          <label for="typeCommerce" class="block text-sm font-medium text-slate-700 mb-1.5">Type de commerce</label>
+          <select id="typeCommerce" class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <option value="Restaurant">Restaurant</option>
+            <option value="Cafe / Bar">Cafe / Bar</option>
+            <option value="Hotel">Hotel</option>
+            <option value="Salon de coiffure / Beaute">Salon de coiffure / Beaute</option>
+            <option value="Boutique / Commerce de detail">Boutique / Commerce de detail</option>
+            <option value="Boulangerie / Patisserie">Boulangerie / Patisserie</option>
+            <option value="Garage / Automobile">Garage / Automobile</option>
+            <option value="Sante / Bien-etre">Sante / Bien-etre</option>
+            <option value="Artisan / Services">Artisan / Services</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+
+        <!-- Note -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1.5">Note de l'avis <span class="text-slate-400 font-normal">(optionnel)</span></label>
+          <div id="stars" class="flex items-center gap-1">
+            <button type="button" class="star-btn text-3xl text-slate-300" data-value="1" aria-label="1 etoile">&#9733;</button>
+            <button type="button" class="star-btn text-3xl text-slate-300" data-value="2" aria-label="2 etoiles">&#9733;</button>
+            <button type="button" class="star-btn text-3xl text-slate-300" data-value="3" aria-label="3 etoiles">&#9733;</button>
+            <button type="button" class="star-btn text-3xl text-slate-300" data-value="4" aria-label="4 etoiles">&#9733;</button>
+            <button type="button" class="star-btn text-3xl text-slate-300" data-value="5" aria-label="5 etoiles">&#9733;</button>
+            <button type="button" id="clearStars" class="ml-3 text-xs text-slate-400 hover:text-slate-600 underline">effacer</button>
+          </div>
+          <input type="hidden" id="note" value="" />
+        </div>
+
+        <!-- Avis -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="avis" class="block text-sm font-medium text-slate-700">Texte de l'avis Google</label>
+            <button type="button" id="exemple" class="text-xs font-medium text-indigo-600 hover:text-indigo-700">Voir un exemple</button>
+          </div>
+          <textarea id="avis" rows="5" maxlength="3000" placeholder="Collez ici le texte de l'avis du client..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+          <div class="text-right text-xs text-slate-400 mt-1"><span id="count">0</span> / 3000</div>
+        </div>
+
+        <!-- Bouton -->
+        <button type="submit" id="submitBtn" class="w-full rounded-xl bg-indigo-600 text-white font-semibold py-3 text-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+          <span id="btnText">Generer la reponse</span>
+          <svg id="spinner" class="hidden animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg>
+        </button>
+      </form>
+
+      <!-- Erreur -->
+      <div id="error" class="hidden mt-5 rounded-xl bg-red-50 ring-1 ring-red-200 px-4 py-3 text-sm text-red-700"></div>
+
+      <!-- Resultat -->
+      <div id="result" class="hidden mt-6">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-sm font-semibold text-slate-700">Reponse proposee</h2>
+          <button type="button" id="copyBtn" class="text-xs font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path></svg>
+            <span id="copyText">Copier</span>
+          </button>
+        </div>
+        <div id="reply" class="whitespace-pre-wrap rounded-xl bg-slate-50 ring-1 ring-slate-200 px-4 py-3.5 text-sm leading-relaxed text-slate-800"></div>
+      </div>
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 mt-8">
+      AvisReply &middot; Reponses generees par IA, a relire avant publication.
+    </footer>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const form = $("form");
+    const noteInput = $("note");
+    const avis = $("avis");
+    const count = $("count");
+    const errorBox = $("error");
+    const result = $("result");
+    const replyBox = $("reply");
+    const submitBtn = $("submitBtn");
+    const btnText = $("btnText");
+    const spinner = $("spinner");
+
+    // Compteur de caracteres
+    avis.addEventListener("input", () => { count.textContent = avis.value.length; });
+
+    // Etoiles
+    const starBtns = Array.from(document.querySelectorAll("#stars .star-btn"));
+    function renderStars(val) {
+      starBtns.forEach((b) => {
+        const v = Number(b.dataset.value);
+        b.classList.toggle("text-amber-400", v <= val);
+        b.classList.toggle("text-slate-300", v > val);
+      });
+    }
+    starBtns.forEach((b) => {
+      b.addEventListener("click", () => {
+        const v = Number(b.dataset.value);
+        noteInput.value = v;
+        renderStars(v);
+      });
+    });
+    $("clearStars").addEventListener("click", () => { noteInput.value = ""; renderStars(0); });
+
+    // Exemple
+    $("exemple").addEventListener("click", () => {
+      $("typeCommerce").value = "Restaurant";
+      noteInput.value = "2";
+      renderStars(2);
+      avis.value = "Cadre sympa mais service vraiment trop lent ce soir, on a attendu 45 minutes pour les plats et la serveuse semblait debordee. Les plats etaient bons une fois arrives, mais l'attente a gache la soiree.";
+      count.textContent = avis.value.length;
+    });
+
+    // Copier
+    $("copyBtn").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(replyBox.textContent);
+        $("copyText").textContent = "Copie !";
+        setTimeout(() => { $("copyText").textContent = "Copier"; }, 1800);
+      } catch (e) {
+        const range = document.createRange();
+        range.selectNodeContents(replyBox);
+        const sel = window.getSelection();
+        sel.removeAllRanges(); sel.addRange(range);
+      }
+    });
+
+    function setLoading(loading) {
+      submitBtn.disabled = loading;
+      spinner.classList.toggle("hidden", !loading);
+      btnText.textContent = loading ? "Generation en cours..." : "Generer la reponse";
+    }
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.classList.remove("hidden");
+    }
+
+    // Soumission
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorBox.classList.add("hidden");
+      result.classList.add("hidden");
+
+      const payload = {
+        typeCommerce: $("typeCommerce").value,
+        note: noteInput.value || null,
+        avis: avis.value.trim(),
+      };
+
+      if (!payload.avis) {
+        showError("Veuillez coller le texte d'un avis.");
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const res = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          showError(data.error || "Une erreur est survenue. Veuillez reessayer.");
+          return;
+        }
+        replyBox.textContent = data.reply;
+        result.classList.remove("hidden");
+        result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } catch (err) {
+        showError("Impossible de contacter le serveur. Verifiez votre connexion.");
+      } finally {
+        setLoading(false);
+      }
+    });
+  </script>
+</body>
+</html>
