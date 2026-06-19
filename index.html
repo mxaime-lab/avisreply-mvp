@@ -3,205 +3,167 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AvisReply — Reponses IA a vos avis Google</title>
-  <meta name="description" content="Generez en un clic une reponse professionnelle a vos avis Google grace a l'IA." />
+  <title>AvisReply – Répondre aux avis Google en quelques secondes</title>
+  <meta name="description" content="AvisReply génère vos réponses aux avis Google en quelques secondes. Pensé pour les commerçants, artisans et indépendants en France. Essayez-le gratuitement." />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AvisReply – Répondre aux avis Google en quelques secondes" />
+  <meta property="og:description" content="Collez un avis, obtenez une réponse professionnelle prête à publier. Pensé pour les commerçants français." />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AvisReply – Répondre aux avis Google en quelques secondes" />
+  <meta name="twitter:description" content="Collez un avis, obtenez une réponse professionnelle prête à publier." />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect x='2' y='3' width='24' height='17' rx='6' fill='%230A2F24'/%3E%3Cpath d='M8 20v5l6-5H8Z' fill='%230A2F24'/%3E%3Cpath d='M14 7.5l1.3 2.7 2.9.4-2.1 2.1.5 2.9-2.6-1.4-2.6 1.4.5-2.9-2.1-2.1 2.9-.4z' fill='%23fff'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .star-btn { transition: transform .1s ease; }
-    .star-btn:hover { transform: scale(1.15); }
-  </style>
-</head>
-<body class="bg-slate-50 text-slate-800 min-h-screen">
-  <div class="max-w-2xl mx-auto px-4 py-10">
-
-    <!-- En-tete -->
-    <header class="text-center mb-8">
-      <div class="inline-flex items-center gap-2 mb-3">
-        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg">A</div>
-        <span class="text-2xl font-bold tracking-tight">AvisReply</span>
-      </div>
-      <h1 class="text-xl sm:text-2xl font-semibold text-slate-900">Repondez a vos avis Google en un clic</h1>
-      <p class="text-slate-500 mt-2">Collez un avis, l'IA redige une reponse professionnelle prete a publier.</p>
-    </header>
-
-    <!-- Carte formulaire -->
-    <main class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-6 sm:p-8">
-      <form id="form" class="space-y-5">
-
-        <!-- Type de commerce -->
-        <div>
-          <label for="typeCommerce" class="block text-sm font-medium text-slate-700 mb-1.5">Type de commerce</label>
-          <select id="typeCommerce" class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-            <option value="Restaurant">Restaurant</option>
-            <option value="Cafe / Bar">Cafe / Bar</option>
-            <option value="Hotel">Hotel</option>
-            <option value="Salon de coiffure / Beaute">Salon de coiffure / Beaute</option>
-            <option value="Boutique / Commerce de detail">Boutique / Commerce de detail</option>
-            <option value="Boulangerie / Patisserie">Boulangerie / Patisserie</option>
-            <option value="Garage / Automobile">Garage / Automobile</option>
-            <option value="Sante / Bien-etre">Sante / Bien-etre</option>
-            <option value="Artisan / Services">Artisan / Services</option>
-            <option value="Autre">Autre</option>
-          </select>
-        </div>
-
-        <!-- Note -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1.5">Note de l'avis <span class="text-slate-400 font-normal">(optionnel)</span></label>
-          <div id="stars" class="flex items-center gap-1">
-            <button type="button" class="star-btn text-3xl text-slate-300" data-value="1" aria-label="1 etoile">&#9733;</button>
-            <button type="button" class="star-btn text-3xl text-slate-300" data-value="2" aria-label="2 etoiles">&#9733;</button>
-            <button type="button" class="star-btn text-3xl text-slate-300" data-value="3" aria-label="3 etoiles">&#9733;</button>
-            <button type="button" class="star-btn text-3xl text-slate-300" data-value="4" aria-label="4 etoiles">&#9733;</button>
-            <button type="button" class="star-btn text-3xl text-slate-300" data-value="5" aria-label="5 etoiles">&#9733;</button>
-            <button type="button" id="clearStars" class="ml-3 text-xs text-slate-400 hover:text-slate-600 underline">effacer</button>
-          </div>
-          <input type="hidden" id="note" value="" />
-        </div>
-
-        <!-- Avis -->
-        <div>
-          <div class="flex items-center justify-between mb-1.5">
-            <label for="avis" class="block text-sm font-medium text-slate-700">Texte de l'avis Google</label>
-            <button type="button" id="exemple" class="text-xs font-medium text-indigo-600 hover:text-indigo-700">Voir un exemple</button>
-          </div>
-          <textarea id="avis" rows="5" maxlength="3000" placeholder="Collez ici le texte de l'avis du client..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
-          <div class="text-right text-xs text-slate-400 mt-1"><span id="count">0</span> / 3000</div>
-        </div>
-
-        <!-- Bouton -->
-        <button type="submit" id="submitBtn" class="w-full rounded-xl bg-indigo-600 text-white font-semibold py-3 text-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-          <span id="btnText">Generer la reponse</span>
-          <svg id="spinner" class="hidden animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg>
-        </button>
-      </form>
-
-      <!-- Erreur -->
-      <div id="error" class="hidden mt-5 rounded-xl bg-red-50 ring-1 ring-red-200 px-4 py-3 text-sm text-red-700"></div>
-
-      <!-- Resultat -->
-      <div id="result" class="hidden mt-6">
-        <div class="flex items-center justify-between mb-2">
-          <h2 class="text-sm font-semibold text-slate-700">Reponse proposee</h2>
-          <button type="button" id="copyBtn" class="text-xs font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
-            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path></svg>
-            <span id="copyText">Copier</span>
-          </button>
-        </div>
-        <div id="reply" class="whitespace-pre-wrap rounded-xl bg-slate-50 ring-1 ring-slate-200 px-4 py-3.5 text-sm leading-relaxed text-slate-800"></div>
-      </div>
-    </main>
-
-    <footer class="text-center text-xs text-slate-400 mt-8">
-      AvisReply &middot; Reponses generees par IA, a relire avant publication.
-    </footer>
-  </div>
-
   <script>
-    const $ = (id) => document.getElementById(id);
-    const form = $("form");
-    const noteInput = $("note");
-    const avis = $("avis");
-    const count = $("count");
-    const errorBox = $("error");
-    const result = $("result");
-    const replyBox = $("reply");
-    const submitBtn = $("submitBtn");
-    const btnText = $("btnText");
-    const spinner = $("spinner");
-
-    // Compteur de caracteres
-    avis.addEventListener("input", () => { count.textContent = avis.value.length; });
-
-    // Etoiles
-    const starBtns = Array.from(document.querySelectorAll("#stars .star-btn"));
-    function renderStars(val) {
-      starBtns.forEach((b) => {
-        const v = Number(b.dataset.value);
-        b.classList.toggle("text-amber-400", v <= val);
-        b.classList.toggle("text-slate-300", v > val);
-      });
-    }
-    starBtns.forEach((b) => {
-      b.addEventListener("click", () => {
-        const v = Number(b.dataset.value);
-        noteInput.value = v;
-        renderStars(v);
-      });
-    });
-    $("clearStars").addEventListener("click", () => { noteInput.value = ""; renderStars(0); });
-
-    // Exemple
-    $("exemple").addEventListener("click", () => {
-      $("typeCommerce").value = "Restaurant";
-      noteInput.value = "2";
-      renderStars(2);
-      avis.value = "Cadre sympa mais service vraiment trop lent ce soir, on a attendu 45 minutes pour les plats et la serveuse semblait debordee. Les plats etaient bons une fois arrives, mais l'attente a gache la soiree.";
-      count.textContent = avis.value.length;
-    });
-
-    // Copier
-    $("copyBtn").addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(replyBox.textContent);
-        $("copyText").textContent = "Copie !";
-        setTimeout(() => { $("copyText").textContent = "Copier"; }, 1800);
-      } catch (e) {
-        const range = document.createRange();
-        range.selectNodeContents(replyBox);
-        const sel = window.getSelection();
-        sel.removeAllRanges(); sel.addRange(range);
-      }
-    });
-
-    function setLoading(loading) {
-      submitBtn.disabled = loading;
-      spinner.classList.toggle("hidden", !loading);
-      btnText.textContent = loading ? "Generation en cours..." : "Generer la reponse";
-    }
-    function showError(msg) {
-      errorBox.textContent = msg;
-      errorBox.classList.remove("hidden");
-    }
-
-    // Soumission
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      errorBox.classList.add("hidden");
-      result.classList.add("hidden");
-
-      const payload = {
-        typeCommerce: $("typeCommerce").value,
-        note: noteInput.value || null,
-        avis: avis.value.trim(),
-      };
-
-      if (!payload.avis) {
-        showError("Veuillez coller le texte d'un avis.");
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const res = await fetch("/api/generate", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          showError(data.error || "Une erreur est survenue. Veuillez reessayer.");
-          return;
-        }
-        replyBox.textContent = data.reply;
-        result.classList.remove("hidden");
-        result.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      } catch (err) {
-        showError("Impossible de contacter le serveur. Verifiez votre connexion.");
-      } finally {
-        setLoading(false);
-      }
-    });
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            forest: '#0A2F24',
+            'forest-light': '#15523D',
+            ink: '#0B0E0C',
+            mist: '#F3F6F3',
+            gold: '#D6A75B',
+            line: '#E4E8E3',
+          },
+          fontFamily: {
+            display: ['"Fraunces"', 'serif'],
+          },
+          boxShadow: {
+            soft: '0 30px 60px -25px rgba(10,47,36,0.35)',
+            card: '0 16px 40px -20px rgba(10,47,36,0.25)',
+          },
+        },
+      },
+    };
   </script>
-</body>
-</html>
+  <style>
+    body { font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    [data-reveal] { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+    .faq-panel { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+    .faq-item[data-open="true"] .faq-panel { max-height: 320px; }
+    .faq-item[data-open="true"] .chev { transform: rotate(45deg); }
+    .chev { transition: transform .3s ease; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      [data-reveal] { opacity: 1; transform: none; transition: none; }
+      *, *::before, *::after { animation-duration: .001ms !important; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "AvisReply peut-il vraiment m'aider à répondre aux avis Google ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. AvisReply est conçu spécifiquement pour répondre aux avis Google, qu'ils soient positifs, négatifs ou neutres. Vous collez le texte de l'avis, et l'outil génère une réponse professionnelle en quelques secondes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Les réponses générées sont-elles personnalisées ou génériques ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Chaque réponse s'appuie sur le contenu réel de l'avis et sur le type d'activité de votre commerce. L'objectif n'est pas un texte générique, mais des réponses qui sonnent naturelles, comme si vous les aviez écrites vous-même."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Faut-il des compétences techniques pour utiliser AvisReply ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Non, aucune compétence particulière n'est nécessaire. AvisReply a été pensé pour les commerçants, artisans et indépendants qui veulent une solution simple et rapide, sans avoir à apprendre un outil compliqué."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Combien coûte AvisReply ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "L'outil est accessible directement en ligne : vous collez un avis et obtenez votre réponse immédiatement, sans inscription. Essayez-le dès maintenant pour voir le résultat sur vos propres avis."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body class="bg-mist text-ink antialiased">
+
+  <header id="site-header" class="fixed inset-x-0 top-0 z-50 bg-mist/90 backdrop-blur-md transition-shadow duration-300">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6 sm:py-4 md:px-8">
+      <a href="#" class="flex items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2" aria-label="AvisReply, retour en haut de page">
+        <svg viewBox="0 0 28 28" class="h-8 w-8 shrink-0" aria-hidden="true">
+          <rect x="2" y="3" width="24" height="17" rx="6" fill="#0A2F24"/>
+          <path d="M8 20v5l6-5H8Z" fill="#0A2F24"/>
+          <path d="M14 7.5l1.3 2.7 2.9.4-2.1 2.1.5 2.9-2.6-1.4-2.6 1.4.5-2.9-2.1-2.1 2.9-.4L14 7.5Z" fill="#fff"/>
+        </svg>
+        <span class="hidden font-display text-lg font-bold text-ink sm:inline md:text-xl">AvisReply</span>
+      </a>
+      <nav class="hidden items-center gap-8 text-sm font-medium text-ink/70 md:flex">
+        <a href="#probleme" class="transition hover:text-forest">Pourquoi</a>
+        <a href="#etapes" class="transition hover:text-forest">Comment ça marche</a>
+        <a href="#avis" class="transition hover:text-forest">Avis</a>
+        <a href="#faq" class="transition hover:text-forest">FAQ</a>
+      </nav>
+      <a href="#outil" class="shrink-0 rounded-full bg-forest px-3.5 py-2 text-xs font-semibold text-white outline-none transition hover:bg-forest-light focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 sm:px-5 sm:py-2.5 sm:text-sm">
+        Essayer maintenant
+      </a>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="relative overflow-hidden bg-[radial-gradient(ellipse_at_top,#103D2E,#0A2F24_60%)] pt-28 pb-20 text-white sm:pt-32 md:pb-28">
+      <div class="mx-auto max-w-6xl px-6 md:px-8">
+        <div class="mx-auto max-w-3xl text-center">
+          <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold text-white/80" data-reveal>
+            <span class="relative flex h-2 w-2">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-60"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-gold"></span>
+            </span>
+            Outil en ligne, prêt à l'emploi
+          </div>
+          <h1 class="mt-6 font-display text-4xl font-bold leading-[1.08] text-white sm:text-5xl md:text-6xl" data-reveal>
+            Répondez à vos avis Google
+            <span class="italic text-gold">en quelques secondes</span>,
+            pas en quelques heures.
+          </h1>
+          <p class="mx-auto mt-6 max-w-2xl text-base text-white/70 sm:text-lg" data-reveal>
+            AvisReply rédige pour vous des réponses professionnelles et naturelles à chaque avis Google, qu'il soit élogieux, mitigé ou difficile. Vous gardez le contrôle, vous gagnez le temps.
+          </p>
+          <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row" data-reveal>
+            <a href="#outil" class="w-full rounded-full bg-gold px-7 py-3.5 text-sm font-bold text-forest outline-none transition hover:brightness-105 focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-forest sm:w-auto">
+              Essayer gratuitement
+            </a>
+            <a href="#etapes" class="w-full rounded-full border border-white/20 px-7 py-3.5 text-sm font-semibold text-white outline-none transition hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-white/40 sm:w-auto">
+              Voir comment ça marche
+            </a>
+          </div>
+          <p class="mt-4 text-xs text-white/50" data-reveal>Sans inscription · Résultat immédiat</p>
+        </div>
+
+        <div class="mx-auto mt-14 max-w-2xl" data-reveal>
+          <p class="sr-only">Exemple d'avis Google et de réponse générée automatiquement par AvisReply</p>
+          <div class="rounded-2xl bg-white p-2 shadow-soft">
+            <div class="rounded-xl border border-line bg-mist/40 p-5 sm:p-6">
+              <div class="flex items-start gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-forest/10 font-semibold text-forest">SM</div>
+                <div class="min-w-0">
+                  <p class="text-sm font-semibold text-ink">Sophie M.</p>
+                  <p class="text-amber-400" aria-label="2 étoiles sur 5">&#9733;&#9733;<span class="text-line">&#9733;&#9733;&#9733;</span></p>
+                  <p class="mt-2 text-sm leading-relaxed text-ink/70">« Cadre sympa mais service trop lent ce soir, 45 minutes d'attente pour les p
